@@ -1,9 +1,11 @@
-from flask import Flask,render_template, url_for,flash, redirect
+from flask import Flask,render_template, url_for,flash, redirect, request
 from blog import app
-from blog.forms import RegistrationForm, LoginForm
+import secrets,os
+from blog.forms import RegistrationForm, LoginForm,UpdateAccount
 from blog.models import User, Post
 from blog import bcrypt,db
-from flask_login import login_user,current_user, logout_user
+from flask_login import login_user,current_user, logout_user,login_required
+from PIL import Image
 
 
 posts=[
@@ -52,8 +54,9 @@ def login():
         user=User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password,form.password.data):
               login_user(user,remember=form.remember.data)
+              next_page = request.args.get('next') 
               flash("Logged in successfully",'success')
-              return redirect(url_for('home'))
+              return redirect(next_page) if next_page  else redirect(url_for('home'))
              
         else:
             flash("Login unsuccessful..Try again",'danger')      
@@ -63,3 +66,40 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+
+
+@app.route("/account")
+@login_required
+def account():
+    
+    image_file=url_for('static',filename='profile_pic/default.jpg' )#+ current_user.image_file)
+    return render_template('account.html',title='Account',
+                                          image_file=image_file)
+
+
+
+
+
+
+
+@app.route("/update",methods=['GET','POST'])
+@login_required
+def updateAccount():  
+    form = UpdateAccount()
+
+    if form.validate_on_submit():
+        
+
+        current_user.username=form.username.data
+        current_user.email=form.email.data
+
+        db.session.commit()
+        flash("Your Account is Updated",'success')
+        return redirect(url_for('account'))
+    elif request.method=='GET':
+       form.username.data=current_user.username
+       form.email.data=current_user.email
+
+        
+    return render_template('update.html',form =form)                                           

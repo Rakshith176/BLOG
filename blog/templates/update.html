@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<form method="POST" action="" enctype="multipart/form.data">
+	{{ form.hidden_tag() }}
+	<div class="align">
+
+	    <div class="container register-form">
+            <div class="form">
+                <div class="note">
+                    <p>Update your account!!</p>
+                </div>
+
+                <div class="form-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.username.label(class="form-control-label")}}
+
+                                {% if form.username.errors %}
+                                     {{ form.username(class="form-control form-control-lg is-invalid") }}
+                                     <div class="invalid-feedback">
+                                     	{% for error in form.username.errors %}
+                                     	   <span>{{error}}</span>
+                                     	 {% endfor %}  
+                                     </div>
+                                 {% else %}
+                                     {{ form.username(class="form-control form-control-lg") }}
+                                 {% endif %}    
+                            </div>
+                            
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                
+                                {{ form.email.label(class="form-control-label")}}
+                                {% if form.email.errors %}
+                                     {{ form.email(class="form-control form-control-lg is-invalid") }}
+                                     <div class="invalid-feedback">
+                                     	{% for error in form.email.errors %}
+                                     	   <span>{{error}}</span>
+                                     	 {% endfor %}  
+                                     </div>
+                                 {% else %}
+                                     {{ form.email(class="form-control form-control-lg") }}
+                                 {% endif %}    
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <button type="button" class="btnSubmit">{{form.submit}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

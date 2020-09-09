@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+
+
+{% block content %}
+
+
+<div class="prof">
+  <div class="card">
+    <div class="firstinfo"><img class="rounded-circle account-img" src={{ image_file }}/>
+      <div class="profileinfo">
+        <h1>{{ current_user.username }}</h1>
+        <h3>{{ current_user.email }}</h3>
+        <p class="bio">post: 2</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+{% endblock %}
